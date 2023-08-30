@@ -2,6 +2,26 @@
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
 $(function () {
+  var timeBlocks = generateTimeBlocks();
+  console.log(timeBlocks);
+
+  // Create a function that will take in a set hour frame and will create a list of objects that are our timeblocks
+  function generateTimeBlocks() {
+    var startHour = 8;
+    var endHour = 5;
+    var timeBlocks = [];
+
+    for (var i = startHour; i <= endHour + 12; i++) {
+      var timeBlock = {
+        time: i,
+        events: "",
+      };
+      timeBlocks.push(timeBlock);
+    }
+    return timeBlocks;
+  }
+
+  function printTimeBlocks() {}
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
