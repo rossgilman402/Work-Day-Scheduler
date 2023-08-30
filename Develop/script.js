@@ -24,10 +24,22 @@ $(function () {
 
   //Create, build, and place each block to have them be added to the page
   function printTimeBlocks(timeBlocks) {
+    timeBlocksContainer.empty();
     for (var i = 0; i < timeBlocks.length; i++) {
+      var hour = timeBlocks[i].time % 12;
+      if (hour === 0) {
+        hour = 12;
+      }
+      var amOrPm;
+      if (timeBlocks[i].time > 12) {
+        amOrPm = "pm";
+      } else {
+        amOrPm = "am";
+      }
+
       var newTimeBlockEL =
-        $(`<div id="hour-${timeBlocks[i].time}" class="row time-block past">
-      <div class="col-2 col-md-1 hour text-center py-3">9AMs</div>
+        $(`<div id="hour-${hour}" class="row time-block past">
+      <div class="col-2 col-md-1 hour text-center py-3">${hour} ${amOrPm}</div>
       <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
       <button class="btn saveBtn col-2 col-md-1" aria-label="save">
         <i class="fas fa-save" aria-hidden="true"></i>
