@@ -9,7 +9,7 @@ $(function () {
   // Create a function that will take in a set hour frame and will create a list of objects that are our timeblocks
   function generateTimeBlocks() {
     var startHour = 8;
-    var endHour = 5;
+    var endHour = 8;
     var timeBlocks = [];
 
     for (var i = startHour; i <= endHour + 12; i++) {
@@ -24,12 +24,19 @@ $(function () {
 
   //Create, build, and place each block to have them be added to the page
   function printTimeBlocks(timeBlocks) {
+    //Get the current time to compare to each time block
+    var currentHour = parseInt(dayjs().format("H"));
+    var timeBlockEvent;
+
     timeBlocksContainer.empty();
     for (var i = 0; i < timeBlocks.length; i++) {
+      //Get the hour in non military time
       var hour = timeBlocks[i].time % 12;
       if (hour === 0) {
         hour = 12;
       }
+
+      //Get if the time is am or pm
       var amOrPm;
       if (timeBlocks[i].time > 12) {
         amOrPm = "pm";
@@ -37,8 +44,17 @@ $(function () {
         amOrPm = "am";
       }
 
+      //Get the past present and future blocks
+      if (timeBlocks[i].time < currentHour) {
+        timeBlockEvent = "past";
+      } else if (timeBlocks[i].time === currentHour) {
+        timeBlockEvent = "present";
+      } else {
+        timeBlockEvent = "future";
+      }
+
       var newTimeBlockEL =
-        $(`<div id="hour-${hour}" class="row time-block past">
+        $(`<div id="hour-${hour}" class="row time-block ${timeBlockEvent}">
       <div class="col-2 col-md-1 hour text-center py-3">${hour} ${amOrPm}</div>
       <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
       <button class="btn saveBtn col-2 col-md-1" aria-label="save">
