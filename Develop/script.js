@@ -4,6 +4,7 @@
 $(function () {
   var timeBlocksContainer = $("#time-blocks");
   var timeBlocks = generateTimeBlocks();
+  var storageBlocks = [];
   console.log(timeBlocks);
 
   // Create a function that will take in a set hour frame and will create a list of objects that are our timeblocks
@@ -26,7 +27,7 @@ $(function () {
   function printTimeBlocks(timeBlocks) {
     //Get the current time to compare to each time block
     var currentHour = parseInt(dayjs().format("H"));
-    var timeBlockEvent;
+    var pastPresentFuture;
 
     timeBlocksContainer.empty();
     for (var i = 0; i < timeBlocks.length; i++) {
@@ -46,15 +47,15 @@ $(function () {
 
       //Get the past present and future blocks
       if (timeBlocks[i].time < currentHour) {
-        timeBlockEvent = "past";
+        pastPresentFuture = "past";
       } else if (timeBlocks[i].time === currentHour) {
-        timeBlockEvent = "present";
+        pastPresentFuture = "present";
       } else {
-        timeBlockEvent = "future";
+        pastPresentFuture = "future";
       }
 
       var newTimeBlockEL =
-        $(`<div id="hour-${hour}" class="row time-block ${timeBlockEvent}">
+        $(`<div id="hour-${timeBlocks[i].time}" class="row time-block ${pastPresentFuture}">
       <div class="col-2 col-md-1 hour text-center py-3">${hour} ${amOrPm}</div>
       <textarea class="col-8 col-md-10 description" rows="3"> </textarea>
       <button class="btn saveBtn col-2 col-md-1" aria-label="save">
@@ -66,6 +67,29 @@ $(function () {
   }
 
   printTimeBlocks(timeBlocks);
+
+  $("button").click(function () {
+    var timeBlockID = $(this).parent()[0].id;
+    var timeBlockValue = $(this).siblings().next()[0].value;
+    if (timeBlockValue !== " ") {
+      localStorage.setItem(timeBlockID, timeBlockValue);
+      storageBlocks.push(timeBlockID);
+      JSON.stringify(storageBlocks);
+      localStorage.setItem("storage", storageBlocks);
+    }
+  });
+
+  function displayFromStorage() {
+    var storageItems = localStorage.getItem("storage");
+    console.log(storageItems);
+    for (var i = 0; i < storageBlocks.length; i++) {
+      storageItems.push(localStorage.getItem(storageBlocks[i]));
+    }
+    console.log(storageItems);
+  }
+
+  displayFromStorage();
+
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
