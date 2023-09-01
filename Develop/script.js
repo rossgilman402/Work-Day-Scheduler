@@ -5,7 +5,6 @@ $(function () {
   var timeBlocksContainer = $("#time-blocks");
   var timeBlocks = generateTimeBlocks();
   var storageBlocks = [];
-  console.log(timeBlocks);
 
   // Create a function that will take in a set hour frame and will create a list of objects that are our timeblocks
   function generateTimeBlocks() {
@@ -71,24 +70,35 @@ $(function () {
   $("button").click(function () {
     var timeBlockID = $(this).parent()[0].id;
     var timeBlockValue = $(this).siblings().next()[0].value;
+
     if (timeBlockValue !== " ") {
       localStorage.setItem(timeBlockID, timeBlockValue);
       storageBlocks.push(timeBlockID);
-      JSON.stringify(storageBlocks);
-      localStorage.setItem("storage", storageBlocks);
+      var storageBlocksString = JSON.stringify(storageBlocks);
+      localStorage.setItem("storage", storageBlocksString);
     }
   });
 
+  function retriveStorage() {
+    var idList = JSON.parse(localStorage.getItem("storage")) || [];
+
+    for (var i = 0; i < idList.length; i++) {
+      var currentID = idList[i];
+      var data = localStorage.getItem(currentID);
+      $(`#${currentID}`).children().val(data);
+      // [1].val(localStorage.getItem(currentID));
+    }
+  }
+
   function displayFromStorage() {
-    var storageItems = localStorage.getItem("storage");
-    console.log(storageItems);
+    var storageItems = JSON.parse(localStorage.getItem("storage"));
     for (var i = 0; i < storageBlocks.length; i++) {
       storageItems.push(localStorage.getItem(storageBlocks[i]));
     }
-    console.log(storageItems);
   }
 
   displayFromStorage();
+  retriveStorage();
 
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
